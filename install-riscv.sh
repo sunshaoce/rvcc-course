@@ -19,7 +19,7 @@ wget https://mirror.iscas.ac.cn/plct/riscv-gnu-toolchain.20220725.tar.bz2
 # 校验
 echo '73448b2c99cda591fdb5b51fd28bf611  riscv-gnu-toolchain.20220725.tar.bz2' | md5sum -c
 if [ $? != 0 ]; then 
-    echo "Download failed！please download again" 
+    echo "Download failed! Please run again." 
     exit 1
 fi
 
