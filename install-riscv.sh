@@ -10,7 +10,7 @@
 # sudo pacman -Syyu autoconf automake curl python3 libmpc mpfr gmp gawk base-devel bison flex texinfo gperf libtool patchutils bc zlib expat
 
 # 设置该脚本：在遇到未定义变量时报错、在出错时终止脚本运行、打印当前执行的语句、将管道中的子命令的错误也视为错误
-set -uex pipefail
+set -e pipefail
 
 # 进入~目录
 cd
