@@ -24,7 +24,7 @@
 这里我们编译出编译器gcc和模拟器qemu。直接使用本课程的`install-riscv-2.sh`脚本（**请勿直接运行**），使用方法参考视频：[RISCV环境快速配置](https://www.bilibili.com/video/BV1D54y1m78G)。
 
 #### 方式三：使用配置好的Docker环境
-详情可以参考：https://github.com/ksco/rvcc-env-docker。
+详情可以参考：https://github.com/ksco/rvcc-env-docker
 
 ### 【3】 如何对RVCC中的项目使用`make test`
 首先，你需要找到你**RISCV实验环境的路径**，方式一、二的路径为：`~/riscv`。
