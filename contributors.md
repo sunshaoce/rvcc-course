@@ -9,3 +9,4 @@
 - [changliuxy](https://github.com/changliuxy)
 - [daquexian](https://github.com/daquexian)
 - [jiangshengdev](https://github.com/jiangshengdev)
+- [zchrissirhcz](https://github.com/zchrissirhcz)
