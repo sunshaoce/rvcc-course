@@ -8,32 +8,31 @@
 
 欢迎利用PR来对本仓库进行补充。
 
-## Q&A 问答
-### 【1】 这个课程都需要准备什么东西？
+## 【1】 这个课程都需要准备什么东西？
 1. Linux的运行环境，推荐Ubuntu 20.04。
 1. RISC-V的实验环境（需要编译器和模拟器），如何安装参考问题【2】。
 1. 下载RVCC的仓库，即`git clone https://github.com/sunshaoce/rvcc`。
 
-### 【2】 如何安装RISCV的实验环境
+## 【2】 如何安装RISCV的实验环境
 三种方式，自由选择，新手推荐方式1.
 
-#### 方式一（推荐）：解压预先编译好的RISCV环境（基于Ubuntu 20.04）
+### 方式一（推荐）：解压预先编译好的RISCV环境（基于Ubuntu 20.04）
 运行仓库的`install-riscv-1.sh`即可。
 
-#### 方式二：源代码编译RISCV环境（较难）。
-这里我们编译出编译器gcc和模拟器qemu。直接使用本课程的`install-riscv-2.sh`脚本（**请勿直接运行**），使用方法参考视频：[RISCV环境快速配置](https://www.bilibili.com/video/BV1D54y1m78G)。
+### 方式二：源代码编译RISCV环境（较难）。
+这里我们编译出编译器gcc和模拟器qemu。使用本课程的`install-riscv-2.sh`脚本（**请勿直接运行**），使用方法参考视频：[RISCV环境快速配置](https://www.bilibili.com/video/BV1D54y1m78G)。
 
-#### 方式三：使用配置好的Docker环境
+### 方式三：使用配置好的Docker环境
 详情可以参考：https://github.com/ksco/rvcc-env-docker
 
-### 【3】 如何对RVCC中的项目使用`make test`
+## 【3】 如何对RVCC中的项目使用`make test`进行测试
 首先，你需要找到你**RISCV实验环境的路径**，方式一、二的路径为：`~/riscv`。
 
-其次，你需要将`test.sh`中的下面几行代码，选择为你对应的编译器和模拟器，例子如下方所示。
+其次，你需要将`test.sh`或`Makefile`中的下面几行代码，选择为你对应的编译器和模拟器，例子（默认为gcc和qemu）如下方所示。
 
 最后运行`RISCV=~/riscv make test`，注意这里的`~/riscv`必须是你**RISCV实验环境的路径**。
 
-#### 方式一、二可以参考下面这个改法：
+### 第1课～第22课
 修改前：
 ```shell
   # 运行程序，传入期待值，将生成结果写入tmp.s汇编文件。
@@ -62,8 +61,54 @@
   $RISCV/bin/qemu-riscv64 -L $RISCV/sysroot ./tmp
   # $RISCV/bin/spike --isa=rv64gc $RISCV/riscv64-unknown-linux-gnu/bin/pk ./tmp
 ```
+### 第23课～第44课
+在`第1课～第22课`的基础上，再将
+```shell
+# 将下列代码编译为tmp2.o，"-xc"强制以c语言进行编译
+# cat <<EOF | $RISCV/bin/riscv64-unknown-linux-gnu-gcc -xc -c -o tmp2.o -
+cat <<EOF | clang -xc -c -o tmp2.o -
+int ret3() { return 3; }
+int ret5() { return 5; }
+EOF
+```
+改为（**注意此处删去了一行，不是注释掉**）：
+```shell
+# 将下列代码编译为tmp2.o，"-xc"强制以c语言进行编译
+cat <<EOF | $RISCV/bin/riscv64-unknown-linux-gnu-gcc -xc -c -o tmp2.o -
+int ret3() { return 3; }
+int ret5() { return 5; }
+EOF
+```
+### 第45课～第316课
+这个时候已经没有了`test.sh`，我们直接修改`Makefile`。
+```Makefile
+# 测试标签，运行测试
+test/%.exe: rvcc test/%.c
+	$(CC) -o- -E -P -C test/$*.c | ./rvcc -o test/$*.s -
+#	$(RISCV)/bin/riscv64-unknown-linux-gnu-gcc -o- -E -P -C test/$*.c | ./rvcc -o test/$*.s -
+	$(CC) -static -o $@ test/$*.s -xc test/common
+#	$(RISCV)/bin/riscv64-unknown-linux-gnu-gcc -static -o $@ test/$*.s -xc test/common
 
-### 【4】 跳转脚本（可选）
+test: $(TESTS)
+	for i in $^; do echo $$i; ./$$i || exit 1; echo; done
+#	for i in $^; do echo $$i; $(RISCV)/bin/qemu-riscv64 -L $(RISCV)/sysroot ./$$i || exit 1; echo; done
+#	for i in $^; do echo $$i; $(RISCV)/bin/spike --isa=rv64gc $(RISCV)/riscv64-unknown-linux-gnu/bin/pk ./$$i || exit 1; echo; done
+	test/driver.sh
+```
+改为（**注意需要删去几行，而非注释掉**）：
+```Makefile
+# 测试标签，运行测试
+test/%.exe: rvcc test/%.c
+	$(RISCV)/bin/riscv64-unknown-linux-gnu-gcc -o- -E -P -C test/$*.c | ./rvcc -o test/$*.s -
+	$(RISCV)/bin/riscv64-unknown-linux-gnu-gcc -static -o $@ test/$*.s -xc test/common
+
+test: $(TESTS)
+	for i in $^; do echo $$i; $(RISCV)/bin/qemu-riscv64 -L $(RISCV)/sysroot ./$$i || exit 1; echo; done
+#	for i in $^; do echo $$i; $(RISCV)/bin/spike --isa=rv64gc $(RISCV)/riscv64-unknown-linux-gnu/bin/pk ./$$i || exit 1; echo; done
+	test/driver.sh
+```
+
+## 【4】 跳转脚本（可选）
 感谢 @daquexian。
 
 用法是把它复制到 rvcc 项目目录之后：
