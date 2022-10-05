@@ -5,6 +5,7 @@
 - 课程对应的代码仓库位于：https://github.com/sunshaoce/rvcc
 - 课程对应的视频课程位于：https://space.bilibili.com/296494084/channel/collectiondetail?sid=571708
 - 课程对应的QQ群号为：752911871
+- 课程对应的微信群：请添加微信号 fangzhang1024 ，备注rvcc进群
 
 欢迎利用PR来对本仓库进行补充。
 
