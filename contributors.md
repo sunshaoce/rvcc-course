@@ -11,3 +11,4 @@
 - [jiangshengdev](https://github.com/jiangshengdev)
 - [SweetPepers](https://github.com/SweetPepers)
 - [zchrissirhcz](https://github.com/zchrissirhcz)
+- [ZhaoSQ-CH](https://github.com/ZhaoSQ-CH)
