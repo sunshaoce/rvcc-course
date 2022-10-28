@@ -80,7 +80,7 @@ int ret3() { return 3; }
 int ret5() { return 5; }
 EOF
 ```
-### 第45课～第316课
+### 第45课～第154课
 这个时候已经没有了`test.sh`，我们直接修改`Makefile`。
 ```Makefile
 # 测试标签，运行测试
@@ -107,6 +107,31 @@ test: $(TESTS)
 	for i in $^; do echo $$i; $(RISCV)/bin/qemu-riscv64 -L $(RISCV)/sysroot ./$$i || exit 1; echo; done
 #	for i in $^; do echo $$i; $(RISCV)/bin/spike --isa=rv64gc $(RISCV)/riscv64-unknown-linux-gnu/bin/pk ./$$i || exit 1; echo; done
 	test/driver.sh
+```
+
+### 第155课～第178课
+在`第45课～第154课`的基础上，修改`main.c`进行交叉编译测试。
+```c
+// 【注意】
+// 如果是交叉编译，请把这个路径改为$RISCV对应的路径
+// 注意 ~ 应替换为具体的 /home/用户名 的路径
+static char *RVPath = "";
+```
+改为**RISCV实验环境的路径**，例如`"~/riscv"`，同时`~`应替换为你的`"/home/用户名"`。
+```c
+// 【注意】
+// 如果是交叉编译，请把这个路径改为$RISCV对应的路径
+// 注意 ~ 应替换为具体的 /home/用户名 的路径
+static char *RVPath = "/home/用户名/riscv";
+```
+
+### 第179课～第361课
+和前面`第155课～第178课`类似，但是简化掉了之前的这个操作。
+```shell
+# 测试标签，运行测试
+test/%.exe: rvcc test/%.c
+	$(CC) -o- -E -P -C test/$*.c | ./rvcc -o test/$*.s -
+#	$(RISCV)/bin/riscv64-unknown-linux-gnu-gcc -o- -E -P -C test/$*.c | ./rvcc -o test/$*.s -
 ```
 
 ## 【4】 跳转脚本（可选）
