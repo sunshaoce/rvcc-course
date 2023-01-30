@@ -12,5 +12,6 @@
 - [jensenojs](https://github.com/jensenojs)- 
 - [jiangshengdev](https://github.com/jiangshengdev)
 - [SweetPepers](https://github.com/SweetPepers)
+- [wzbitl](https://github.com/wzbitl)
 - [zchrissirhcz](https://github.com/zchrissirhcz)
 - [ZhaoSQ-CH](https://github.com/ZhaoSQ-CH)
