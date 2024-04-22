@@ -45,6 +45,58 @@
 
 其次，你需要将`test.sh`或`Makefile`中的下面几行代码，选择为你对应的编译器和模拟器，例子（默认为gcc和qemu）如下方所示。
 
+### 对于361课的[版本](https://github.com/sunshaoce/rvcc/commit/d5c3e7753af4b0a8ace742d331abdc62cfcf662d)，且使用交叉编译配置，需要进行以下修改以快速执行测试：
+1. 在main.c中修改RVPath
+  
+```c
+// 【注意】
+// 如果是交叉编译，请把这个路径改为$RISCV对应的路径
+// 注意 ~ 应替换为具体的 /home/用户名 的路径
+static char *RVPath = "";
+```
+改为**RISCV实验环境的路径**，例如`"~/riscv"`，同时`~`应替换为你的`"/home/用户名"`（可以使用pwd命令查看）。
+```c
+// 【注意】
+// 如果是交叉编译，请把这个路径改为$RISCV对应的路径
+// 注意 ~ 应替换为具体的 /home/用户名 的路径
+static char *RVPath = "/home/用户名/riscv";
+```
+2. 配置交叉编译环境
+
+在 test/%.exe: rvcc test/%.c 部分和 test: $(TESTS) 部分的编译命令均改为交叉编译命令。
+
+```shell
+# 测试标签，运行测试
+test/%.exe: rvcc test/%.c
+	./rvcc -Iinclude -Itest -I$(RISCV)/sysroot/usr/include -c -o test/$*.o test/$*.c
+	$(CC) -pthread -o $@ test/$*.o -xc test/common
+#	$(RISCV)/bin/riscv64-unknown-linux-gnu-gcc -pthread -static -o $@ test/$*.o -xc test/common
+
+test: $(TESTS)
+	for i in $^; do echo $$i; ./$$i || exit 1; echo; done
+#	for i in $^; do echo $$i; $(RISCV)/bin/qemu-riscv64 -L $(RISCV)/sysroot ./$$i || exit 1; echo; done
+#	for i in $^; do echo $$i; $(RISCV)/bin/spike --isa=rv64gc $(RISCV)/riscv64-unknown-linux-gnu/bin/pk ./$$i || exit 1; echo; done
+	test/driver.sh ./rvcc
+```
+
+改为
+
+```shell
+# 测试标签，运行测试
+test/%.exe: rvcc test/%.c
+	./rvcc -Iinclude -Itest -I$(RISCV)/sysroot/usr/include -c -o test/$*.o test/$*.c
+#	$(CC) -pthread -o $@ test/$*.o -xc test/common
+	$(RISCV)/bin/riscv64-unknown-linux-gnu-gcc -pthread -static -o $@ test/$*.o -xc test/common
+
+test: $(TESTS)
+# 	for i in $^; do echo $$i; ./$$i || exit 1; echo; done
+	for i in $^; do echo $$i; $(RISCV)/bin/qemu-riscv64 -L $(RISCV)/sysroot ./$$i || exit 1; echo; done
+#	for i in $^; do echo $$i; $(RISCV)/bin/spike --isa=rv64gc $(RISCV)/riscv64-unknown-linux-gnu/bin/pk ./$$i || exit 1; echo; done
+	test/driver.sh ./rvcc
+```
+**注意：**Spike使用第三行。
+
+
 最后运行`RISCV=~/riscv make test`，注意这里的`~/riscv`必须是你**RISCV实验环境的路径**。
 
 ### 第1课～第22课
