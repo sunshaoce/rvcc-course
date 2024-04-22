@@ -7,10 +7,11 @@
 
 ## Contributors
 - [changliuxy](https://github.com/changliuxy)
+- [cyk2018](https://github.com/cyk2018)
 - [daquexian](https://github.com/daquexian)
 - [iamtwz](https://github.com/iamtwz)
 - [lizh1999](https://github.com/lizh1999)
-- [jensenojs](https://github.com/jensenojs)- 
+- [jensenojs](https://github.com/jensenojs)
 - [jiangshengdev](https://github.com/jiangshengdev)
 - [SweetPepers](https://github.com/SweetPepers)
 - [wzbitl](https://github.com/wzbitl)
